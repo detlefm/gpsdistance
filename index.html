@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Distance</title>
+  <style>
+        /* Embedded CSS */
+    body {
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    
+    header {
+        background-color: #f0f0f0;
+        padding: 1rem;
+        text-align: center;
+    }
+    
+    main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem;
+    }
+    
+    label {
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+    }
+    
+    #distanceOutput {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+    }
+    
+    #calculateButton {
+        padding: 0.75rem 1rem;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+    <header>
+        <h1>MyHeader</h1>
+      </header>
+      <main>
+        <label for="distanceOutput">Distance:</label>
+        <input type="text" id="distanceOutput" readonly>
+        <button id="calculateButton">Start</button>
+      </main>
+  <script>
+   // Add JS here
+    // Variable to store the saved GPS position
+    let savedPosition;
+
+    const distanceOutput = document.getElementById('distanceOutput');
+    const calculateButton = document.getElementById('calculateButton');
+
+    calculateButton.addEventListener('click', () => {
+    if (calculateButton.innerText === 'Start') {
+        // Get current GPS position (replace this with actual geolocation API call)
+        navigator.geolocation.getCurrentPosition((position) => {
+        savedPosition = position.coords;
+        calculateButton.innerText = 'Calculate';
+        });
+    } else if (calculateButton.innerText === 'Calculate') {
+        // Get current GPS position again (replace this with actual geolocation API call)
+        navigator.geolocation.getCurrentPosition((position) => {
+        const currentPosition = position.coords;
+        // Calculate distance (replace this with actual distance calculation logic)
+        const distance = calculateDistance(savedPosition, currentPosition);
+        distanceOutput.value = distance;
+        savedPosition = currentPosition;
+        calculateButton.innerText = 'Start';
+        });
+    }
+    });
+
+    // Placeholder function to represent distance calculation logic (replace with actual implementation)
+    // function calculateDistance(position1, position2) {
+    //   // Replace with actual distance calculation between two GPS coordinates
+    //   return Math.random() * 100; // Placeholder value
+    // }
+
+
+    function calculateDistance(startCoords, endCoords) {
+        const earthRadius = 6371; // Earth radius in kilometers
+    
+        const startLat = toRadians(startCoords.latitude);
+        const startLon = toRadians(startCoords.longitude);
+        const endLat = toRadians(endCoords.latitude);
+        const endLon = toRadians(endCoords.longitude);
+    
+        const deltaLat = endLat - startLat;
+        const deltaLon = endLon - startLon;
+    
+        const sinHalfDeltaLat = Math.sin(deltaLat / 2);
+        const sinHalfDeltaLon = Math.sin(deltaLon / 2);
+    
+        const a = sinHalfDeltaLat * sinHalfDeltaLat +
+                Math.cos(startLat) * Math.cos(endLat) *
+                sinHalfDeltaLon * sinHalfDeltaLon;
+    
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    
+        const distance = earthRadius * c;
+    
+        return distance;
+    }
+    
+    function toRadians(degree) {
+        return degree * (Math.PI / 180);
+    }
+  
+  </script>
+</body>
+</html>

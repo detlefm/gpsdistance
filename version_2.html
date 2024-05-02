@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entfernungsberechnung</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        input {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Entfernungsberechnung zwischen GPS-Koordinaten</h1>
+
+    <label for="latitude1">Latitude 1:</label>
+    <input type="text" id="latitude1" placeholder="Latitude 1" readonly>
+
+    <label for="longitude1">Longitude 1:</label>
+    <input type="text" id="longitude1" placeholder="Longitude 1" readonly>
+
+    <label for="latitude2">Latitude 2:</label>
+    <input type="text" id="latitude2" placeholder="Latitude 2">
+
+    <label for="longitude2">Longitude 2:</label>
+    <input type="text" id="longitude2" placeholder="Longitude 2">
+
+    <button onclick="calculateDistance()">Berechnen</button>
+
+    <h2>Ergebnis:</h2>
+    <p id="result">Die Entfernung wird hier angezeigt.</p>
+
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    document.getElementById('latitude1').value = position.coords.latitude;
+                    document.getElementById('longitude1').value = position.coords.longitude;
+                }, function(error) {
+                    console.error('Error getting location:', error);
+                    alert('Fehler beim Abrufen der aktuellen Position.');
+                });
+            } else {
+                alert('Geolocation wird von Ihrem Browser nicht unterstützt.');
+            }
+        }
+
+        function calculateDistance() {
+            var lat1 = parseFloat(document.getElementById('latitude1').value);
+            var lon1 = parseFloat(document.getElementById('longitude1').value);
+            var lat2 = parseFloat(document.getElementById('latitude2').value);
+            var lon2 = parseFloat(document.getElementById('longitude2').value);
+
+            if (isNaN(lat1) || isNaN(lon1) || isNaN(lat2) || isNaN(lon2)) {
+                document.getElementById('result').innerHTML = 'Ungültige Eingabe. Bitte geben Sie gültige Zahlen ein.';
+                return;
+            }
+
+            var R = 6371; // Radius der Erde in Kilometern
+            var dLat = (lat2 - lat1) * (Math.PI / 180);
+            var dLon = (lon2 - lon1) * (Math.PI / 180);
+            var a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            var distance = R * c;
+
+            document.getElementById('result').innerHTML = 'Die Entfernung beträgt etwa ' + distance.toFixed(2) + ' Kilometer.';
+        }
+
+        // Automatisch die erste GPS-Koordinate abrufen
+        getLocation();
+    </script>
+</body>
+</html>
