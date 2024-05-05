@@ -62,6 +62,8 @@
    // Add JS here
     // Variable to store the saved GPS position
     let savedPosition;
+    let savedLatitude;
+    let savedLongitude;
 
     const distanceOutput = document.getElementById('distanceOutput');
     const calculateButton = document.getElementById('calculateButton');
@@ -70,14 +72,11 @@
     calculateButton.addEventListener('click', () => {
     if (calculateButton.innerText === 'Start') {
         // Get current GPS position (replace this with actual geolocation API call)
-        distanceOutput.value = ""
         navigator.geolocation.getCurrentPosition((position) => {
+            savedLatitude = position.coords.latitude;
+            savedLongitude = position.coords.longitude;
             savedPosition = position.coords;
-            positionOutput.value = position.coords.latitude + " " + position.coords.longitude;
-            // Test
-            // teststart = createGeolocationCoordinates(48.596995601324146, 17.84769872849938)
-            // savedPosition = teststart   ;
-            positionOutput.value = savedPosition.latitude + " " + savedPosition.longitude;            
+            positionOutput.value = position.coords.latitude+ " " + position.coords.longitude;
             calculateButton.innerText = 'Calculate';
         });
     } else if (calculateButton.innerText === 'Calculate') {
@@ -85,7 +84,7 @@
         navigator.geolocation.getCurrentPosition((position) => {
             const currentPosition = position.coords;
             // Calculate distance (replace this with actual distance calculation logic)
-            const distance = calculateDistance_old(savedPosition, currentPosition);
+            const distance = calculateDistance(savedPosition, currentPosition);
             distanceOutput.value = distance;
             savedPosition = currentPosition;
             calculateButton.innerText = 'Start';
@@ -99,38 +98,30 @@
     //   return Math.random() * 100; // Placeholder value
     // }
 
-    function createGeolocationCoordinates(latitude, longitude) {
-
-        const geolocationCoordinates = {
-            latitude: latitude,
-            longitude: longitude,
-        };
-
-        return geolocationCoordinates;
-    }
-
-
-
-    function calculateDistance_old(start, end) {
-            var lat1 = start.latitude
-            var lon1 = start.longitude
-            var lat2 = end.latitude
-            var lon2 = end.longitude
-
-            if (isNaN(lat1) || isNaN(lon1) || isNaN(lat2) || isNaN(lon2)) {
-                return -1;
-            }
-
-            var R = 6371; // Radius der Erde in Kilometern
-            var dLat = (lat2 - lat1) * (Math.PI / 180);
-            var dLon = (lon2 - lon1) * (Math.PI / 180);
-            var a =
-                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2);
-            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            var distance = R * c;
-            return distance;
+    
+    function calculateDistanceNeu(startLatitude, startLongitude, endLatitude, endLongitudendCoords) {
+        const earthRadius = 6371; // Earth radius in kilometers
+    
+        const startLat = toRadians(startLatitude);
+        const startLon = toRadians(startLongitude);
+        const endLat = toRadians(endLatitude);
+        const endLon = toRadians(endLongitude);
+    
+        const deltaLat = endLat - startLat;
+        const deltaLon = endLon - startLon;
+    
+        const sinHalfDeltaLat = Math.sin(deltaLat / 2);
+        const sinHalfDeltaLon = Math.sin(deltaLon / 2);
+    
+        const a = sinHalfDeltaLat * sinHalfDeltaLat +
+                Math.cos(startLat) * Math.cos(endLat) *
+                sinHalfDeltaLon * sinHalfDeltaLon;
+    
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    
+        const distance = earthRadius * c;
+    
+        return distance;
     }
 
     function calculateDistance(startCoords, endCoords) {
