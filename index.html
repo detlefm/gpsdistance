@@ -117,7 +117,7 @@
             // Calculate distance (replace this with actual distance calculation logic)
             const distance = calculateDistance(savedPosition, currentPosition) * 1000;
             // distanceOutput.value = distance;
-            distanceButton.value = distance;
+            distanceButton.innerText = distance;
             resultLine = resultLine(distance,savedPosition,currentPosition)
             addLine(debugText,resultLine)
             savedPosition = currentPosition;
