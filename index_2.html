@@ -49,15 +49,13 @@
 </head>
 <body>
     <header>
-        <h1>Distance</h1>
+        <h1>MyHeader</h1>
       </header>
       <main>
         <label for="distanceOutput">Distance:</label>
         <input type="text" id="distanceOutput" readonly>
-        <label for="debugText">Debug</label>
-        <textarea id="debugText" rows="10" cols="50"></textarea>
-        <!-- <label for="currentPosition">Position:</label>
-        <input type="text" id="currentPosition" readonly> -->
+        <label for="currentPosition">Position:</label>
+        <input type="text" id="currentPosition" readonly>
         <button id="calculateButton">Start</button>
       </main>
   <script>
@@ -67,7 +65,7 @@
 
     const distanceOutput = document.getElementById('distanceOutput');
     const calculateButton = document.getElementById('calculateButton');
-    const debugText = document.getElementById('debugText')
+    const positionOutput = document.getElementById('currentPosition')
 
     calculateButton.addEventListener('click', () => {
     if (calculateButton.innerText === 'Start') {
@@ -75,11 +73,11 @@
         distanceOutput.value = ""
         navigator.geolocation.getCurrentPosition((position) => {
             savedPosition = position.coords;
-            //positionOutput.value = position.coords.latitude + " " + position.coords.longitude;
+            positionOutput.value = position.coords.latitude + " " + position.coords.longitude;
             // Test
             // teststart = createGeolocationCoordinates(48.596995601324146, 17.84769872849938)
             // savedPosition = teststart   ;
-            //positionOutput.value = savedPosition.latitude + " " + savedPosition.longitude;            
+            positionOutput.value = savedPosition.latitude + " " + savedPosition.longitude;            
             calculateButton.innerText = 'Calculate';
         });
     } else if (calculateButton.innerText === 'Calculate') {
@@ -89,8 +87,6 @@
             // Calculate distance (replace this with actual distance calculation logic)
             const distance = calculateDistance_old(savedPosition, currentPosition);
             distanceOutput.value = distance;
-            resultLine = resultLine(distance,savedPosition,currentPosition)
-            addLine(debugText,resultLine)
             savedPosition = currentPosition;
             calculateButton.innerText = 'Start';
         });
@@ -111,10 +107,6 @@
         };
 
         return geolocationCoordinates;
-    }
-
-    function resultLine(distance, start,end){
-        return `${distance} : ${start.latitude},${start.longitude}-${end.latitude},${end.longitude}`
     }
 
 
@@ -169,26 +161,6 @@
     function toRadians(degree) {
         return degree * (Math.PI / 180);
     }
-
-    function addLine(textField, newline){
-        const textWithLineBreak = `${textField.value}\n${newline}`; // Add line with newline
-        textField.value = textWithLineBreak;
-    }
-
-    // function addLines() {
-    //     function addLine(textField, newline){
-    //         const textWithLineBreak = `${textField.value}\n${newline}`; // Add line with newline
-    //         textField.value = textWithLineBreak;
-    //     }
-        
-    //     const text = textField.value; // Get current text
-
-    //     for (let i = 0; i < numLines; i++) {
-    //         const line = `Line ${i + 1}`; // Generate line content
-    //         const textWithLineBreak = `${text}\n${line}`; // Add line with newline
-    //         textField.value = textWithLineBreak; // Update textarea
-    //     }
-    // }
   
   </script>
 </body>
