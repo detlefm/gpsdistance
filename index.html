@@ -33,7 +33,27 @@
     #distanceOutput {
         width: 100%;
         padding: 0.5rem;
+        align-content: center;
         border: 1px solid #ccc;
+        height: 50px;  /* Set the height */
+        font-size: 18px; /* Increase font size for text */
+        padding: 10px 20px; /* Add padding around text */
+    }
+
+    #distanceButton{
+        /* padding: 0.75rem 1rem; */
+        background-color: lightgray;
+        color: red;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        align-content: center;
+        margin-top: 1rem; 
+        margin-bottom: 2rem;
+        width: 100%;
+        height: 55px;
+        font-size: 35px;
+        font-weight: bold;
     }
     
     #calculateButton {
@@ -45,6 +65,13 @@
         cursor: pointer;
         margin-top: 1rem;
     }
+    button {
+        width: 200px; /* Set the width */
+        height: 50px;  /* Set the height */
+        font-size: 18px; /* Increase font size for text */
+        padding: 10px 20px; /* Add padding around text */
+        border: 2px solid #007bff; /* Add a border */
+    }
   </style>
 </head>
 <body>
@@ -52,27 +79,28 @@
         <h1>Distance</h1>
       </header>
       <main>
-        <label for="distanceOutput">Distance:</label>
-        <input type="text" id="distanceOutput" readonly>
+        <button id="distanceButton">0</button>
+        <!-- <label for="distanceOutput">Distance:</label>
+        <input type="text" id="distanceOutput" readonly> -->
+        <button id="calculateButton">Start</button>  
+        <br><br><br>      
         <label for="debugText">Debug</label>
         <textarea id="debugText" rows="10" cols="50"></textarea>
-        <!-- <label for="currentPosition">Position:</label>
-        <input type="text" id="currentPosition" readonly> -->
-        <button id="calculateButton">Start</button>
       </main>
   <script>
    // Add JS here
     // Variable to store the saved GPS position
     let savedPosition;
 
-    const distanceOutput = document.getElementById('distanceOutput');
+    const distanceButton = document.getElementById('distanceButton')
+    // const distanceOutput = document.getElementById('distanceOutput');
     const calculateButton = document.getElementById('calculateButton');
     const debugText = document.getElementById('debugText')
 
     calculateButton.addEventListener('click', () => {
     if (calculateButton.innerText === 'Start') {
         // Get current GPS position (replace this with actual geolocation API call)
-        distanceOutput.value = ""
+        // distanceOutput.value = ""
         navigator.geolocation.getCurrentPosition((position) => {
             savedPosition = position.coords;
             //positionOutput.value = position.coords.latitude + " " + position.coords.longitude;
@@ -87,8 +115,9 @@
         navigator.geolocation.getCurrentPosition((position) => {
             const currentPosition = position.coords;
             // Calculate distance (replace this with actual distance calculation logic)
-            const distance = calculateDistance_old(savedPosition, currentPosition);
-            distanceOutput.value = distance;
+            const distance = calculateDistance(savedPosition, currentPosition) * 1000;
+            // distanceOutput.value = distance;
+            distanceButton.value = distance;
             resultLine = resultLine(distance,savedPosition,currentPosition)
             addLine(debugText,resultLine)
             savedPosition = currentPosition;
